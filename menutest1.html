@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Menú Sushi Interactivo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f6f2;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8em;
+      border-bottom: 2px solid #D35400;
+      padding-bottom: 5px;
+      margin-bottom: 20px;
+    }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 10px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .item button {
+      background: linear-gradient(to right, #D35400, #E67E22);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease;
+    }
+    .item button:hover {
+      transform: scale(1.05);
+    }
+    hr {
+      border: none;
+      border-top: 1px dashed #ccc;
+      margin: 30px 0;
+    }
+    #resumen {
+      border-top: 2px solid #D35400;
+      padding-top: 20px;
+    }
+    #orden-lista {
+      list-style: none;
+      padding: 0;
+    }
+    #orden-lista li {
+      background-color: #fff;
+      border: 1px solid #eee;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    #confirmar {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: #D35400;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Menú Sushi Interactivo</h1>
+
+  <!-- Sección 1: Platillos -->
+  <section>
+    <h2>🍣 Selecciona tu platillo</h2>
+    <div class="item"><div><strong>Roll de Salmón Ahumado</strong><br>Con aguacate, queso crema y ajonjolí — $120</div><button onclick="agregarOrden('Roll de Salmón Ahumado', 120)">Elegir</button></div>
+    <div class="item"><div><strong>Nigiri de Atún</strong><br>Atún fresco sobre arroz sazonado — $95</div><button onclick="agregarOrden('Nigiri de Atún', 95)">Elegir</button></div>
+  </section>
+
+  <hr>
+
+  <!-- Sección 2: Bebidas -->
+  <section>
+    <h2>🥤 Bebidas</h2>
+    <div class="item"><div>Galón de té — $80</div><button onclick="agregarOrden('Galón de té', 80)">Elegir</button></div>
+    <div class="item"><div>Litro de té — $45</div><button onclick="agregarOrden('Litro de té', 45)">Elegir</button></div>
+    <div class="item"><div>Vaso de té — $25</div><button onclick="agregarOrden('Vaso de té', 25)">Elegir</button></div>
+    <div class="item"><div>Agua embotellada 600ml — $20</div><button onclick="agregarOrden('Agua embotellada 600ml', 20)">Elegir</button></div>
+    <div class="item"><div>Soda 600ml — $30</div><button onclick="agregarOrden('Soda 600ml', 30)">Elegir</button></div>
+    <div class="item"><div>Té en lata 355ml — $28</div><button onclick="agregarOrden('Té en lata 355ml', 28)">Elegir</button></div>
+  </section>
+
+  <hr>
+
+  <!-- Sección 3: Extras -->
+  <section>
+    <h2>🌶️ Extras</h2>
+    <div class="item"><div>Salsa anguila — $12</div><button onclick="agregarOrden('Salsa anguila', 12)">Elegir</button></div>
+    <div class="item"><div>Aderezo chipotle — $10</div><button onclick="agregarOrden('Aderezo chipotle', 10)">Elegir</button></div>
+    <div class="item"><div>Chiles toreados — $8</div><button onclick="agregarOrden('Chiles toreados', 8)">Elegir</button></div>
+  </section>
+
+  <hr>
+
+  <!-- Sección 4: Resumen -->
+  <section id="resumen">
+    <h2>🧾 Resumen de tu orden</h2>
+    <ul id="orden-lista"></ul>
+    <p><strong>Total: $<span id="total">0</span></strong></p>
+    <button id="confirmar" onclick="confirmarOrden()">Confirmar y Pagar</button>
+  </section>
+
+  <script>
+    let total = 0;
+    const ordenLista = document.getElementById('orden-lista');
+    const totalSpan = document.getElementById('total');
+
+    function agregarOrden(nombre, precio) {
+      const item = document.createElement('li');
+      item.textContent = `${nombre} — $${precio}`;
+      ordenLista.appendChild(item);
+      total += precio;
+      totalSpan.textContent = total;
+    }
+
+    function confirmarOrden() {
+      alert(`Gracias por tu orden. Total a pagar: $${total}`);
+      // Aquí podrías redirigir a una pasarela de pago o generar ticket
+    }
+  </script>
+
+</body>
+</html>
