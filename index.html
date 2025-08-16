@@ -6,15 +6,15 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #fffdf7;
-      color: #333;
+      background-color: #000000;
+      color: #fffdf7;
       padding: 20px;
       max-width: 600px;
       margin: auto;
     }
 
     h1, h2 {
-      color: #b22222;
+      color: orange;
       border-bottom: 1px solid #eee;
       padding-bottom: 5px;
     }
@@ -28,11 +28,11 @@
     }
 
     p:hover {
-      background-color: #f9f3eb;
+      background-color: orange;
     }
 
     #resumen-container {
-      background-color: #fefefe;
+      background-color: #000000;
       border: 1px solid #ddd;
       border-radius: 10px;
       padding: 15px;
@@ -42,11 +42,12 @@
 
     #resumen-container h3 {
       margin-top: 0;
-      color: #444;
+      color: orange;
     }
 
     .item {
       display: flex;
+      align-items: center;
       justify-content: space-between;
       padding: 6px 0;
       border-bottom: 1px solid #eee;
@@ -64,8 +65,8 @@
     }
 
     button {
-      background-color: #b22222;
-      color: white;
+      background-color: orange;
+      color: #000000;
       border: none;
       padding: 10px 20px;
       border-radius: 8px;
@@ -75,16 +76,39 @@
     }
 
     button:hover {
-      background-color: #a11d1d;
+      background-color: white;
+    }
+
+    .qty-btn {
+      background: none;
+      border: none;
+      font-size: 1.0em;
+      cursor: pointer;
+      color: #b22222;
+      padding: 4px;
+    }
+
+    .remove {
+      cursor: pointer;
+      color: red;
+      font-size: 1.0em;
+      margin-right: 10px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
     }
   </style>
 </head>
 <body>
   <h1>Menú Sushi Interactivo 🍣</h1>
-  <h2>Selecciona tu platillo</h2>
 
-  <p onclick="agregar('Roll de Salmón Ahumado', 120)">Roll de Salmón Ahumado — $120</p>
-  <p onclick="agregar('Nigiri de Atún', 95)">Nigiri de Atún — $95</p>
+  <h2>Selecciona tu platillo</h2>
+  <p onclick="agregar('Orenji Especial', 120)">Orenji Especial — $120</p>
+  <p onclick="agregar('Guamuchilito', 130)">Guamuchilito — $130</p>
+  <p onclick="agregar('Bacon Cream', 140)">Bacon Cream — $140</p>
+
 
   <h2>🥤 Bebidas</h2>
   <p onclick="agregar('Galón de té', 80)">Galón de té — $80</p>
@@ -99,85 +123,139 @@
   <p onclick="agregar('Aderezo chipotle', 10)">Aderezo chipotle — $10</p>
   <p onclick="agregar('Chiles toreados', 8)">Chiles toreados — $8</p>
 
-<h2>🛎️ Modalidad de orden</h2>
-<div style="margin-bottom: 20px;">
-  <button onclick="seleccionarModo('Recoger en restaurante')">Recoger en restaurante</button>
-  <button onclick="seleccionarModo('Entrega en mesa')">Entrega en mesa</button>
-  <button onclick="seleccionarModo('Sala de espera')">Entrega en sala de espera</button>
-  <button onclick="seleccionarModo('Domicilio')">Entrega a domicilio</button>
-</div>
-<div id="modo-info" style="margin-bottom: 10px; font-weight: bold;"></div>
-<div id="modo-form" style="margin-bottom: 30px;"></div>
+  <h2>🛎️ Modalidad de orden</h2>
+  <div style="margin-bottom:20px;">
+    <button onclick="seleccionarModo('Recoger en restaurante')">Recoger en restaurante</button>
+    <button onclick="seleccionarModo('Entrega en mesa')">Entrega en mesa</button>
+    <button onclick="seleccionarModo('Domicilio')">Domicilio</button>
+  </div>
+  <div id="modo-info" style="margin-bottom:10px; font-weight:bold;"></div>
+  <div id="modo-form" style="margin-bottom:30px;"></div>
 
-<script>
-  let orden = [];
-  let total = 0;
-  let modalidad = '';
-  let datosEntrega = '';
+  <script>
+    let orden = [];
+    let total = 0;
+    let modalidad = '';
+    let datosEntrega = '';
 
-  function agregar(nombre, precio) {
-    orden.push({ nombre, precio });
-    total += precio;
-    actualizarResumen();
-  }
-
-  function seleccionarModo(modo) {
-    modalidad = modo;
-    const info = document.getElementById("modo-info");
-    const form = document.getElementById("modo-form");
-    form.innerHTML = '';
-    datosEntrega = '';
-
-    if (modo === 'Recoger en restaurante') {
-      info.innerHTML = '⏱️ Tiempo estimado: 10 a 30 minutos';
-      form.innerHTML = 'Nombre de quien recoge: <input type="text" id="nombreRecoge">';
-    } else if (modo === 'Entrega en mesa') {
-      info.innerHTML = '⏱️ Tiempo estimado: 10 a 30 minutos';
-      form.innerHTML = 'Número de mesa (1-4): <input type="number" id="mesa" min="1" max="4">';
-    } else if (modo === 'Sala de espera') {
-      info.innerHTML = '⏱️ Tiempo estimado: 10 a 30 minutos';
-      form.innerHTML = 'Nombre de quien recibe: <input type="text" id="nombreSala">';
-    } else if (modo === 'Domicilio') {
-      info.innerHTML = '⏱️ Tiempo estimado: 30 a 60 minutos';
-      form.innerHTML = 'Dirección: <input type="text" id="direccion"><br>Nombre de quien recibe: <input type="text" id="nombreDomicilio">';
-    }
-    actualizarResumen();
-  }
-
-  function actualizarResumen() {
-    const resumen = document.getElementById("resumen");
-    let detalles = '';
-
-    if (modalidad === 'Recoger en restaurante') {
-      const nombre = document.getElementById("nombreRecoge")?.value || '';
-      datosEntrega = nombre;
-      detalles = `📦 Modalidad: ${modalidad}<br>👤 Recoge: ${nombre}`;
-    } else if (modalidad === 'Entrega en mesa') {
-      const mesa = document.getElementById("mesa")?.value || '';
-      datosEntrega = `Mesa ${mesa}`;
-      detalles = `📦 Modalidad: ${modalidad}<br>🪑 Mesa: ${mesa}`;
-    } else if (modalidad === 'Sala de espera') {
-      const nombre = document.getElementById("nombreSala")?.value || '';
-      datosEntrega = nombre;
-      detalles = `📦 Modalidad: ${modalidad}<br>👤 Recibe: ${nombre}`;
-    } else if (modalidad === 'Domicilio') {
-      const dir = document.getElementById("direccion")?.value || '';
-      const nom = document.getElementById("nombreDomicilio")?.value || '';
-      datosEntrega = `${nom}, ${dir}`;
-      detalles = `📦 Modalidad: ${modalidad}<br>🏠 Dirección: ${dir}<br>👤 Recibe: ${nom}`;
+    function agregar(nombre, precio) {
+      const existente = orden.find(item => item.nombre === nombre);
+      if (existente) {
+        existente.cantidad += 1;
+      } else {
+        orden.push({ nombre, precio, cantidad: 1 });
+      }
+      total += precio;
+      actualizarResumen();
     }
 
-    resumen.innerHTML = orden.map(item =>
-      `<div class="item"><span>${item.nombre}</span><span>$${item.precio}</span></div>`
-    ).join("") + `<hr>${detalles}`;
-    document.getElementById("total").textContent = "Total: $" + total;
-  }
+    function seleccionarModo(modo) {
+      modalidad = modo;
+      const info = document.getElementById("modo-info");
+      const form = document.getElementById("modo-form");
+      form.innerHTML = '';
+      datosEntrega = '';
 
-  function confirmar() {
-    actualizarResumen();
-    alert(`Gracias por tu orden.\nModalidad: ${modalidad}\nEntrega: ${datosEntrega}\nTotal: $${total}`);
-  }
-</script>
+      if (modo === 'Recoger en restaurante') {
+        info.innerHTML = '⏱️ Tiempo estimado: 10 a 30 minutos';
+        form.innerHTML = 'Nombre de quien recoge: <input type="text" id="nombreRecoge">';
+      } else if (modo === 'Entrega en mesa') {
+        info.innerHTML = '⏱️ Tiempo estimado: 10 a 30 minutos';
+        form.innerHTML = 'Número de mesa (1-4): <input type="number" id="mesa" min="1" max="4">';
+      } else if (modo === 'Sala de espera') {
+        info.innerHTML = '⏱️ Tiempo estimado: 10 a 30 minutos';
+        form.innerHTML = 'Nombre de quien recibe: <input type="text" id="nombreSala">';
+      } else if (modo === 'Domicilio') {
+        info.innerHTML = '⏱️ Tiempo estimado: 30 a 60 minutos';
+        form.innerHTML =
+          'Dirección: <input type="text" id="direccion"><br>' +
+          'Nombre de quien recibe: <input type="text" id="nombreDomicilio">';
+      }
+      actualizarResumen();
+    }
+
+    function eliminar(index) {
+      total -= orden[index].precio * orden[index].cantidad;
+      orden.splice(index, 1);
+      actualizarResumen();
+    }
+
+    function sumar(index) {
+      orden[index].cantidad += 1;
+      total += orden[index].precio;
+      actualizarResumen();
+    }
+
+    function restar(index) {
+      if (orden[index].cantidad > 1) {
+        orden[index].cantidad -= 1;
+        total -= orden[index].precio;
+      } else {
+        eliminar(index);
+        return;
+      }
+      actualizarResumen();
+    }
+
+    function actualizarResumen() {
+      const resumen = document.getElementById("resumen");
+      let detalles = '';
+
+      if (modalidad === 'Recoger en restaurante') {
+        const nombre = document.getElementById("nombreRecoge")?.value || '';
+        datosEntrega = nombre;
+        detalles = `📦 Modalidad: ${modalidad}<br>👤 Recoge: ${nombre}`;
+      } else if (modalidad === 'Entrega en mesa') {
+        const mesa = document.getElementById("mesa")?.value || '';
+        datosEntrega = `Mesa ${mesa}`;
+        detalles = `📦 Modalidad: ${modalidad}<br>🪑 Mesa: ${mesa}`;
+      } else if (modalidad === 'Sala de espera') {
+        const nombre = document.getElementById("nombreSala")?.value || '';
+        datosEntrega = nombre;
+        detalles = `📦 Modalidad: ${modalidad}<br>👤 Recibe: ${nombre}`;
+      } else if (modalidad === 'Domicilio') {
+        const dir = document.getElementById("direccion")?.value || '';
+        const nom = document.getElementById("nombreDomicilio")?.value || '';
+        datosEntrega = `${nom}, ${dir}`;
+        detalles = `📦 Modalidad: ${modalidad}<br>🏠 Dirección: ${dir}<br>👤 Recibe: ${nom}`;
+      }
+
+      const itemsHTML = orden.map((item, index) => `
+        <div class="item">
+          <span class="remove" onclick="eliminar(${index})">❌</span>
+          <span style="flex:1; margin-left:10px;">${item.nombre}</span>
+          <span class="controls">
+            <button class="qty-btn" onclick="restar(${index})">➖</button>
+            ${item.cantidad}
+            <button class="qty-btn" onclick="sumar(${index})">➕</button>
+          </span>
+          <span style="margin-left:10px;">$${item.precio * item.cantidad}</span>
+        </div>
+      `).join('');
+
+      resumen.innerHTML = itemsHTML + `<hr>${detalles}`;
+      document.getElementById("total").textContent = "Total: $" + total;
+    }
+
+    function confirmar() {
+      if (!modalidad || !datosEntrega) {
+        alert("Por favor completa los datos de entrega.");
+        return;
+      }
+      const resumenOrden = orden
+        .map(item => `• ${item.nombre} x${item.cantidad} — $${item.precio * item.cantidad}`)
+        .join('\n');
+      const mensaje =
+        `Hola, quiero confirmar mi orden:\n\n` +
+        `🧾 Detalles:\n${resumenOrden}\n\n` +
+        `📦 Modalidad: ${modalidad}\n` +
+        `📍 Entrega: ${datosEntrega}\n` +
+        `💰 Total: $${total}`;
+      const numeroRestaurante = '526861807886';
+      const urlWhatsApp = `https://wa.me/${numeroRestaurante}?text=${encodeURIComponent(mensaje)}`;
+      window.location.href = urlWhatsApp;
+    }
+  </script>
 
   <div id="resumen-container">
     <h3>🧾 Resumen de tu orden</h3>
@@ -185,47 +263,6 @@
     <div id="total">Total: $0</div>
     <button onclick="confirmar()">Confirmar y Pagar</button>
   </div>
-
-  <script>
-    let orden = [];
-    let total = 0;
-
-    function agregar(nombre, precio) {
-      orden.push({ nombre, precio });
-      total += precio;
-      actualizarResumen();
-    }
-
-    function actualizarResumen() {
-      const resumen = document.getElementById("resumen");
-      resumen.innerHTML = orden.map(item =>
-        `<div class="item"><span>${item.nombre}</span><span>$${item.precio}</span></div>`
-      ).join("");
-      document.getElementById("total").textContent = "Total: $" + total;
-    }
-
-    function confirmar() {
-      alert("Gracias por tu orden. Total: $" + total);
-    }
-  </script>
 </body>
 </html>
-
-<script>
-  function confirmar() {
-    actualizarResumen();
-    if (!modalidad || !datosEntrega) {
-      alert("Por favor completa los datos de entrega.");
-      return;
-    }
-
-    const resumenOrden = orden.map(item => `• ${item.nombre} — $${item.precio}`).join('\n');
-    const mensaje = `Hola, quiero confirmar mi orden:\n\n🧾 Detalles:\n${resumenOrden}\n\n📦 Modalidad: ${modalidad}\n📍 Entrega: ${datosEntrega}\n💰 Total: $${total}\n\nPor favor envíen la carátula bancaria para realizar la transferencia.`;
-
-    const numeroRestaurante = '526861807886'; // sin el "+"
-    const urlWhatsApp = `https://wa.me/${numeroRestaurante}?text=${encodeURIComponent(mensaje)}`;
-
-    window.location.href = urlWhatsApp;
-  }
-</script>
-
+```
